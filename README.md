@@ -27,6 +27,7 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 ## Authors
 
 * **Kevin Haston** - *Initial work* - [Git Hub Profile](https://github.com/khaston10)
+	* **Kyle Haston** - *Collab* - Poopy
 
 If you add to this project put your information here.
 
