@@ -3,10 +3,11 @@ from LocationTypes import *
 from ItemTypes import *
 from Location import Location
 from Humanoid import Humanoid
+from AcceptableAnswers import *
 import random
 
 
-def question(question, acceptable_answers):
+def question(question, answers=acceptable_answers):
     """
     To avoid situations where the user inputs an inappropriate string.
     :param question: string
@@ -15,11 +16,10 @@ def question(question, acceptable_answers):
     """
     not_acceptable_answer = True
     while not_acceptable_answer:
-        temp_answer = input(question)
-        # if temp_answer.lower() in acceptable_answers:# Bypassing this check to get commands working. Accept any input.
-        temp_answer.lower()
-        not_acceptable_answer = False
-
+        temp_answer = input(question).lower()
+        for cmd_list in answers:
+            if temp_answer in cmd_list:
+                not_acceptable_answer = False
     return temp_answer
 
 

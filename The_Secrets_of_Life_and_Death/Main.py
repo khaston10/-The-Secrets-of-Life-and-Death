@@ -3,16 +3,16 @@ from HumanoidTypes import *
 from Location import Location
 from LocationTypes import *
 from Functions import *
-from commands import *
+from AcceptableAnswers import *
 
 def main():
 
     # Initialize game settings__________________________________________________
 
     # Initialize player settings.
-    humanoid_type = question("Do you want to be a dwarf or goblin?", ["dwarf", "goblin"])
+    humanoid_type = question("Do you want to be a dwarf or goblin?", [["dwarf", "goblin"]])
     name = input("What is your name?")
-    gender = question("What is your gender?", ["male", "female"])
+    gender = question("What is your gender?", [["male", "female"]])
     player = create_humanoid(humanoid_type, name, gender, player=True)
 
     # Initialize npc settings.
@@ -43,14 +43,14 @@ def main():
     list_of_rooms.append(room_8)
 
     # Connect locations.
-    room_1.exits = {"right": room_2, "left": room_3, "ahead": room_5}
-    room_2.exits = {"left": room_1}
-    room_3.exits = {"right": room_1}
-    room_4.exits = {"left": room_5}
-    room_5.exits = {"right": room_4, "left": room_6, "behind": room_1, "ahead": room_7}
-    room_6.exits = {"right": room_5, "ahead": room_8}
-    room_7.exits = {"behind": room_5}
-    room_8.exits = {"behind": room_6}
+    room_1.exits = {"east": room_2, "west": room_3, "north": room_5}
+    room_2.exits = {"west": room_1}
+    room_3.exits = {"east": room_1}
+    room_4.exits = {"west": room_5}
+    room_5.exits = {"east": room_4, "west": room_6, "south": room_1, "north": room_7}
+    room_6.exits = {"east": room_5, "north": room_8}
+    room_7.exits = {"south": room_5}
+    room_8.exits = {"south": room_6}
 
     # Update player's and npc's location.
     player.room = room_1
@@ -59,13 +59,10 @@ def main():
     npcs[2].room = room_3
     npcs[3].room = room_3
 
-    # Initialize acceptable answers.
-    acceptable_answers = ["go to room on right", "go to room on left",
-                          "go to room ahead", "go to room behind", "look", "help"]
     list_of_acceptable_look_at_player_commands = []
     for npc in npcs:
-        acceptable_answers.append("look at " + npc.name.lower())
         list_of_acceptable_look_at_player_commands.append("look at " + npc.name.lower())
+    acceptable_answers.append(list_of_acceptable_look_at_player_commands)
 
 
 
@@ -86,33 +83,33 @@ def main():
     # Update game state_________________________________________________________
         # Update player.
 
-            if action in go_right:
-                if "right" in player.room.exits:
+            if action in go_east:
+                if "east" in player.room.exits:
                     player.room.delete_character(player)
-                    player.go(player.room.exits["right"])
+                    player.go(player.room.exits["east"])
                     player.room.add_character(player)
                     time = "move forward"
-            elif action == go_left:
-                if "left" in player.room.exits:
+            elif action in go_west:
+                if "west" in player.room.exits:
                     player.room.delete_character(player)
-                    player.go(player.room.exits["left"])
+                    player.go(player.room.exits["west"])
                     player.room.add_character(player)
                     time = "move forward"
-            elif action == "go to room ahead":
-                if "ahead" in player.room.exits:
+            elif action in go_north:
+                if "north" in player.room.exits:
                     player.room.delete_character(player)
-                    player.go(player.room.exits["ahead"])
+                    player.go(player.room.exits["north"])
                     player.room.add_character(player)
                     time = "move forward"
-            elif action == "go to room behind":
-                if "behind" in player.room.exits:
+            elif action in go_south:
+                if "south" in player.room.exits:
                     player.room.delete_character(player)
-                    player.go(player.room.exits["behind"])
+                    player.go(player.room.exits["south"])
                     player.room.add_character(player)
                     time = "move forward"
-            elif action == "help":
+            elif action in cmd_help:
                 print_help_menu()
-            elif action == "look":
+            elif action in look:
                 print(player.look())
             elif action in list_of_acceptable_look_at_player_commands:
                 print(player.look_at_character(action[8:len(action)]))
