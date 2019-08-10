@@ -5,7 +5,7 @@ class Humanoid:
     """
     This class represents a humanoid.
     """
-    def __init__(self, name="no_name", gender="male", health=100, items=[], visibility=100, player=False, player_id=0):
+    def __init__(self, name="no_name", gender="male", health=100, items=[], visibility=100, player=False):
         self.name = name
         self.gender = gender
         self.health = health
@@ -15,7 +15,6 @@ class Humanoid:
         self.player = player
         # This attribute is only initialized after rooms have been created. It is an instance of a location.
         self.room = ""
-        self.player_id=player_id
 
     def get_description(self):
         """
@@ -60,13 +59,11 @@ class Humanoid:
         if name in list_of_character_names:
             index = list_of_character_names.index(name)
             description += list_of_characters[index].get_description() + "\n"
-            description += list_of_characters[index].get_description_of_items() + "\n"
+            description += list_of_characters[index].name + " has: " + list_of_characters[index].get_description_of_items()
             return description
         else:
             description += name + " not found."
             return description
-
-
 
     def get_description_of_items(self):
         """
@@ -74,11 +71,13 @@ class Humanoid:
         :return: List of items
         """
         description = ""
+        weapons = ""
         if len(self.items) == 0:
             description = self.name + " has no items."
             return description
-        elif len(self.items) == 1:
-            pass
-        else:
-            pass
+        elif len(self.items) >= 1:
+            for item in self.items:
+                description += str(item.get_description())
+            return description
+
 

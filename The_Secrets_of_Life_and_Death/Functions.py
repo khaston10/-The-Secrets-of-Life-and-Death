@@ -1,8 +1,10 @@
 from HumanoidTypes import *
 from LocationTypes import *
+from ItemTypes import *
 from Location import Location
 from Humanoid import Humanoid
 import random
+
 
 def question(question, acceptable_answers):
     """
@@ -19,7 +21,8 @@ def question(question, acceptable_answers):
 
     return temp_answer
 
-def create_humanoid(type, name, gender, player, player_id):
+
+def create_humanoid(type, name, gender, player):
     """
     This function creates a humanoid of type, and returns it.
     :param type: string, currently it can be "dwarf" or "goblin"
@@ -28,12 +31,13 @@ def create_humanoid(type, name, gender, player, player_id):
     :return: Humanoid object.
     """
     if type == "dwarf" or type == "Dwarf":
-        return Dwarf(name=name, gender=gender, player=player, player_id=player_id)
+        return Dwarf(name=name, gender=gender, player=player)
 
     elif type == "goblin" or type == "Goblin":
-        return Goblin(name=name, gender=gender, player=player, player_id=player_id)
+        return Goblin(name=name, gender=gender, player=player)
 
-def create_nps(number_of_npcs):
+
+def create_npcs(number_of_npcs):
     """
     This function returns a list of humanoid objects, they will all have unique names.
     :param number_of_npcs: integer
@@ -47,10 +51,37 @@ def create_nps(number_of_npcs):
         random_name = random.choice(names[random_species])
         names[random_species].remove(random_name)
         random_gender = random.choice(["male", "female"])
-        npc_i = create_humanoid(type=random_species, name=random_name, gender=random_gender, player=False, player_id=i)
+        npc_i = create_humanoid(type=random_species, name=random_name, gender=random_gender, player=False)
         list_of_npcs.append(npc_i)
 
     return list_of_npcs
+
+
+def assign_npcs_items(list_of_npcs):
+    """
+    Assign items list of npcs.
+    :param list_of_npcs: list of humanoids
+    :return: None
+    """
+    sword = Sword(description="This is a sword.", assigned=False, item_type="sword", material="bronze", condition="new")
+    list_of_npcs[0].items.append(sword)
+
+
+def create_weapon(type_of_weapon, material, condition="new"):
+    """
+    This function creates a weapon.
+    :param type_of_weapon: String. Acceptable types at this point are ["sword", "axe"]
+    :param material: String. Acceptable types at this point are ["bronze", "copper", "silver" "iron"]
+    :param condition: String. Acceptable condition at this point are ["broken", "used", "new"]
+    :return: None
+    """
+    if type_of_weapon == "sword":
+        sword = Sword(material=material, condition=condition, item_type="sword")
+        return sword
+    elif type_of_weapon == "axe":
+        axe = Axe(material=material, condition=condition, item_type="axe")
+        return axe
+
 
 def create_location(type):
     """
@@ -66,6 +97,7 @@ def create_location(type):
 
     return room
 
+
 def print_list_of_items_in_rooms(list_of_rooms):
     """
     This function prints a list of items in each room.
@@ -75,6 +107,7 @@ def print_list_of_items_in_rooms(list_of_rooms):
     for room in list_of_rooms:
         print("The items in " + str(room) + ":")
         print(room.items)
+
 
 def print_list_of_characters_in_rooms(list_of_rooms):
     """
@@ -87,6 +120,7 @@ def print_list_of_characters_in_rooms(list_of_rooms):
         for character in room.characters:
             print(character.name)
 
+
 def print_game_information(list_of_rooms):
     """
     This function prints all game objects to screen.
@@ -96,8 +130,9 @@ def print_game_information(list_of_rooms):
     for room in list_of_rooms:
         character_list = []
         for char in room.characters:
-            character_list.append(char.player_id)
-        print(room.name + "\n" + "Player ids: " + str(character_list))
+            character_list.append(char.name)
+        print(room.name + "\n" + "Player names: " + str(character_list))
+
 
 def print_help_menu():
     """
@@ -115,6 +150,7 @@ def print_help_menu():
     print("look")
     print("look at 'character's name'")
     print("---------------------------------------------------------------------------------------------------------\n")
+
 
 def print_game_intro():
     """

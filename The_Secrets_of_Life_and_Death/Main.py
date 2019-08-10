@@ -13,19 +13,23 @@ def main():
     humanoid_type = question("Do you want to be a dwarf or goblin?", ["dwarf", "goblin"])
     name = input("What is your name?")
     gender = question("What is your gender?", ["male", "female"])
-    player = create_humanoid(humanoid_type, name, gender, player=True, player_id=-1)
+    player = create_humanoid(humanoid_type, name, gender, player=True)
 
     # Initialize npc settings.
     probability_that_npc_will_move = 50  # This is given in percentage.
-    npcs = create_nps(4)
+    npcs = create_npcs(4)
+    assign_npcs_items(npcs)
+    for npc in npcs:
+        print(npc.name)
+        print(npc.items)
 
     # Initialize locations.
     list_of_rooms = []
-    room_1 = Big_Room(name="room_1", characters=[player], player_ids=[player.player_id])
+    room_1 = Big_Room(name="room_1", characters=[player])
     list_of_rooms.append(room_1)
-    room_2 = Small_Room(name="room_2", characters=[npcs[0], npcs[1]], player_ids=[npcs[0].player_id, npcs[1].player_id])
+    room_2 = Small_Room(name="room_2", characters=[npcs[0], npcs[1]])
     list_of_rooms.append(room_2)
-    room_3 = Big_Room(name="room_3", characters=[npcs[2], npcs[3]], player_ids=[npcs[2].player_id, npcs[3].player_id])
+    room_3 = Big_Room(name="room_3", characters=[npcs[2], npcs[3]])
     list_of_rooms.append(room_3)
     room_4 = Small_Room(name="room_4")
     list_of_rooms.append(room_4)
@@ -43,7 +47,7 @@ def main():
     room_2.exits = {"left": room_1}
     room_3.exits = {"right": room_1}
     room_4.exits = {"left": room_5}
-    room_5.exits = {"right": room_4, "left": room_6, "behind": room_1}
+    room_5.exits = {"right": room_4, "left": room_6, "behind": room_1, "ahead": room_7}
     room_6.exits = {"right": room_5, "ahead": room_8}
     room_7.exits = {"behind": room_5}
     room_8.exits = {"behind": room_6}
@@ -72,7 +76,7 @@ def main():
     while game:
 
     # This line is put here for game testing purposes. It will print to screen all game objects and their locations.
-        # print_game_information(list_of_rooms)
+        print_game_information(list_of_rooms)
 
         time = "stay"
         while time != "move forward":
