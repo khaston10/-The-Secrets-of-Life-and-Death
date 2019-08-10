@@ -30,8 +30,7 @@ def main():
     for npc in npcs:
         weapon = random.choice(["sword", "axe"])
         assign_npc_item(npc, weapon)
-        print(npc.name)
-        print(npc.items)
+        assign_npc_item(npc, "shield")
 
     # Initialize locations.
     list_of_rooms = []

@@ -54,25 +54,24 @@ def create_npcs(number_of_npcs):
         random_gender = random.choice(["male", "female"])
         list_of_npcs.append(create_humanoid(type=random_species, name=random_name, gender=random_gender, player=False))
 
-
-    print(list_of_npcs)
     return list_of_npcs
 
 
 def assign_npc_item(in_npc, type_of_item):
     """
     Assign items list of npcs.
-    :param npc: A humanoid
-    :param: type_of_item: String, this is a type of item. Acceptable items are "sword", "axe".
+    :param in_npc: A humanoid
+    :param: type_of_item: String, this is a type of item. Acceptable items are "sword", "axe", "shield".
     :return: None
     """
     if type_of_item == "sword":
-        in_npc.items.append(Sword(description="This is a sword.", assigned=False, item_type="sword",
-                                  material="bronze", condition="new"))
+        in_npc.items.append(Sword(assigned=True, material="bronze", condition="new", item_type="sword"))
 
     elif type_of_item == "axe":
-        in_npc.items.append(Axe(description="This is a sword.", assigned=False, item_type="axe",
-                                material="bronze", condition="new"))
+        in_npc.items.append(Axe(assigned=True, material="bronze", condition="new", item_type="axe"))
+
+    elif type_of_item == "shield":
+        in_npc.items.append(Shield(assigned=True, material="bronze", condition="new", item_type="shield"))
 
 
 def create_weapon(type_of_weapon, material, condition="new"):

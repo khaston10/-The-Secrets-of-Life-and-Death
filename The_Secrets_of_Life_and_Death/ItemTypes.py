@@ -38,5 +38,17 @@ class Axe(Weapon):
         self.attack_max = 50
         self.health = 100
 
+class Shield(Item):
+    def __int__(self, description="This is a Shield.", assigned=False, item_type="shield",
+                material="bronze", condition="new"):
+        super().__init__(description, assigned, item_type, material, condition)
+
+        self.description = description
+        self.assigned = assigned
+        self.item_type = item_type
+        self.block_min = 5
+        self.block_max = 50
+        self.health = 100
+
 
 

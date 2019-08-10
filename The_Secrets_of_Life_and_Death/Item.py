@@ -3,7 +3,8 @@ class Item:
     """
     This class represents all items a humanoid can carry.
     """
-    def __init__(self, description="Default Item", assigned=False, item_type="no_type", material="bronze", condition="new"):
+    def __init__(self, description="Default Item", assigned=False, item_type="no_type",
+                 material="bronze", condition="new"):
         self.description = description
         self.assigned = assigned
         self.item_type = item_type
@@ -23,6 +24,6 @@ class Item:
         :return: String.
         """
         description = ""
-        description += self.condition + " " + self.material + " " + self.item_type
+        description += self.condition + " " + self.material + " " + self.item_type + " "
         return description
 
