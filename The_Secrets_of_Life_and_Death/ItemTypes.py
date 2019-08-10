@@ -12,6 +12,18 @@ class Weapon(Item):
         self.attack_max = 5
         self.health = 100
 
+class Armour(Item):
+    def __int__(self, description="This is a Shield.", assigned=False, item_type="shield",
+                material="bronze", condition="new"):
+        super().__init__(description, assigned, item_type, material, condition)
+
+        self.description = description
+        self.assigned = assigned
+        self.item_type = item_type
+        self.block_min = 5
+        self.block_max = 50
+        self.health = 100
+
 
 class Sword(Weapon):
     def __int__(self, description="This is a sword.", assigned=False, item_type="sword",
@@ -38,8 +50,20 @@ class Axe(Weapon):
         self.attack_max = 50
         self.health = 100
 
-class Shield(Item):
+class Shield(Armour):
     def __int__(self, description="This is a Shield.", assigned=False, item_type="shield",
+                material="bronze", condition="new"):
+        super().__init__(description, assigned, item_type, material, condition)
+
+        self.description = description
+        self.assigned = assigned
+        self.item_type = item_type
+        self.block_min = 5
+        self.block_max = 50
+        self.health = 100
+
+class Helmet(Armour):
+    def __int__(self, description="This is a Helmet.", assigned=False, item_type="helmet",
                 material="bronze", condition="new"):
         super().__init__(description, assigned, item_type, material, condition)
 

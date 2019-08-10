@@ -61,7 +61,7 @@ def assign_npc_item(in_npc, type_of_item):
     """
     Assign items list of npcs.
     :param in_npc: A humanoid
-    :param: type_of_item: String, this is a type of item. Acceptable items are "sword", "axe", "shield".
+    :param: type_of_item: String, this is a type of item. Acceptable items are "sword", "axe", "shield", "helmet".
     :return: None
     """
     if type_of_item == "sword":
@@ -72,6 +72,9 @@ def assign_npc_item(in_npc, type_of_item):
 
     elif type_of_item == "shield":
         in_npc.items.append(Shield(assigned=True, material="bronze", condition="new", item_type="shield"))
+
+    elif type_of_item == "helmet":
+        in_npc.items.append(Helmet(assigned=True, material="bronze", condition="new", item_type="helmet"))
 
 
 def create_weapon(type_of_weapon, material, condition="new"):

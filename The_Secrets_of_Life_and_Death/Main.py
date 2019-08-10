@@ -31,6 +31,7 @@ def main():
         weapon = random.choice(["sword", "axe"])
         assign_npc_item(npc, weapon)
         assign_npc_item(npc, "shield")
+        assign_npc_item(npc, "helmet")
 
     # Initialize locations.
     list_of_rooms = []
@@ -81,7 +82,7 @@ def main():
     while game:
 
     # This line is put here for game testing purposes. It will print to screen all game objects and their locations.
-        print_game_information(list_of_rooms)
+        # print_game_information(list_of_rooms)
 
         time = "stay"
         while time != "move forward":
