@@ -16,8 +16,9 @@ def question(question, acceptable_answers):
     not_acceptable_answer = True
     while not_acceptable_answer:
         temp_answer = input(question)
-        if temp_answer.lower() in acceptable_answers:
-            not_acceptable_answer = False
+        # if temp_answer.lower() in acceptable_answers:# Bypassing this check to get commands working. Accept any input.
+        temp_answer.lower()
+        not_acceptable_answer = False
 
     return temp_answer
 
@@ -157,6 +158,25 @@ def print_game_intro():
     This function prints the game intro information.
     :return: None
     """
+
+    print("\n")
+    print("----------------------------------------")
+    print("| .---.                 .              |")
+    print("| \___  ,-. ,-. ,-. ,-. |- ,-.         |")
+    print("|     \ |-' |   |   |-' |  `-.         |")
+    print("| `---' `-' `-' '   `-' `' `-'         |")
+    print("|                                      |")
+    print("|                                      |")
+    print("|     ,_   .      ,_                   |")
+    print("| ,-. |_   |    . |_ ,-.               |")
+    print("| | | |    |    | |  |-'               |")
+    print("| `-' |    `--' ' |  `-'               |")
+    print("|     '           '                    |")
+    print("|                                      |")
+    print("|           .   .-,--.          .  .   |")
+    print("| ,-. ,-. ,-|   ' |   \ ,-. ,-. |- |-. |")
+    print("| ,-| | | | |   , |   / |-' ,-| |  | | |")
+    print("| `-^ ' ' `-'   `-^--'  `-' `-^ `' ' ' |")
     print("\n---------------------------------------------------------------------------------------------------------")
     print("At last, your search is over! You found the infamous tower! Rumor has it, a necromancer resides here. \n"
           "Be on guard. You know what you are here to do, the time for action is nigh.")

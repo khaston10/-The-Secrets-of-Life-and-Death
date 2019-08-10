@@ -3,7 +3,7 @@ from HumanoidTypes import *
 from Location import Location
 from LocationTypes import *
 from Functions import *
-
+from commands import *
 
 def main():
 
@@ -86,13 +86,13 @@ def main():
     # Update game state_________________________________________________________
         # Update player.
 
-            if action == "go to room on right":
+            if action in go_right:
                 if "right" in player.room.exits:
                     player.room.delete_character(player)
                     player.go(player.room.exits["right"])
                     player.room.add_character(player)
                     time = "move forward"
-            elif action == "go to room on left":
+            elif action == go_left:
                 if "left" in player.room.exits:
                     player.room.delete_character(player)
                     player.go(player.room.exits["left"])
