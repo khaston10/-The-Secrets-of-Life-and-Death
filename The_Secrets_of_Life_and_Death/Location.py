@@ -1,18 +1,15 @@
-
 class Location:
     """
     This class represents a location.
     """
-    def __init__(self, name="no_name", description="This is a room.", items=[], characters=[],
-                 exits={}, light_level=100, room_capacity=20):
+    def __init__(self, name="no_name", description="This is a room.", light_level=100, room_capacity=20):
         self.name = name
         self.description = description
-        self.items = items
-        self.characters = characters
-        self.exits = exits  # This is a dictionary of the form {"location of exit": room}
+        self.items = []
+        self.characters = []
+        self.exits = {}  # This is a dictionary of the form {"location of exit": room}
         self.light_level = light_level
         self.room_Capacity = room_capacity
-
 
     def get_description(self):
         """

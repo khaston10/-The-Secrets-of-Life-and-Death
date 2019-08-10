@@ -2,9 +2,12 @@ from Humanoid import Humanoid
 from HumanoidTypes import *
 from Location import Location
 from LocationTypes import *
+from Map import *
 from Functions import *
 from AcceptableAnswers import *
+from random import randint
 from ItemTypes import *
+
 
 def main():
 
@@ -21,8 +24,10 @@ def main():
     elif weapon == "axe":
         player.items.append(Axe(assigned=True, item_type="axe", material="bronze", condition="new"))
 
-    list_of_acceptable_look_at_player_commands = ["look at " + player.name.lower()]
-
+    # Initialize locations.
+    seed = 666
+    max_rooms = 32
+    list_of_rooms = map_init(seed, randint(1, max_rooms))
 
     # Initialize npc settings.
     probability_that_npc_will_move = 50  # This is given in percentage.
@@ -33,47 +38,12 @@ def main():
         assign_npc_item(npc, "shield")
         assign_npc_item(npc, "helmet")
 
-    # Initialize locations.
-    list_of_rooms = []
-    room_1 = Big_Room(name="room_1", characters=[player])
-    list_of_rooms.append(room_1)
-    room_2 = Small_Room(name="room_2", characters=[npcs[0], npcs[1]])
-    list_of_rooms.append(room_2)
-    room_3 = Big_Room(name="room_3", characters=[npcs[2], npcs[3]])
-    list_of_rooms.append(room_3)
-    room_4 = Small_Room(name="room_4")
-    list_of_rooms.append(room_4)
-    room_5 = Big_Room(name="room_5")
-    list_of_rooms.append(room_5)
-    room_6 = Small_Room(name="room_6")
-    list_of_rooms.append(room_6)
-    room_7 = Big_Room(name="room_7")
-    list_of_rooms.append(room_7)
-    room_8 = Small_Room(name="room_8")
-    list_of_rooms.append(room_8)
-
-    # Connect locations.
-    room_1.exits = {"east": room_2, "west": room_3, "north": room_5}
-    room_2.exits = {"west": room_1}
-    room_3.exits = {"east": room_1}
-    room_4.exits = {"west": room_5}
-    room_5.exits = {"east": room_4, "west": room_6, "south": room_1, "north": room_7}
-    room_6.exits = {"east": room_5, "north": room_8}
-    room_7.exits = {"south": room_5}
-    room_8.exits = {"south": room_6}
-
     # Update player's and npc's location.
-    player.room = room_1
-    npcs[0].room = room_2
-    npcs[1].room = room_2
-    npcs[2].room = room_3
-    npcs[3].room = room_3
+    map_scatter_chars(player, npcs, list_of_rooms)
 
     for npc in npcs:
         list_of_acceptable_look_at_player_commands.append("look at " + npc.name.lower())
     acceptable_answers.append(list_of_acceptable_look_at_player_commands)
-
-
 
     # Main game loop____________________________________________________________
     print_game_intro()
@@ -81,12 +51,17 @@ def main():
 
     while game:
 
+<<<<<<< HEAD
     # This line is put here for game testing purposes. It will print to screen all game objects and their locations.
         # print_game_information(list_of_rooms)
+=======
+        # This line is put here for game testing purposes. It will print to screen all game objects and their locations.
+        print_game_information(list_of_rooms)
+>>>>>>> 3c282292bd551268afd073c2fc5ed40709b1304c
 
         time = "stay"
         while time != "move forward":
-    # Get user input____________________________________________________________
+            # Get user input____________________________________________________________
             action = question("What do you do?", acceptable_answers)
 
     # Update game state_________________________________________________________
@@ -137,8 +112,8 @@ def main():
             npc.go(npc.room.exits[direction])
             npc.room.add_character(npc)
 
-
-
-    # Print to screen___________________________________________________________
+        # Print to screen___________________________________________________________
         print(player.room.get_description())
+
+
 main()
