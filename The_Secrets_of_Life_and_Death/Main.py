@@ -4,6 +4,7 @@ from Location import Location
 from LocationTypes import *
 from Functions import *
 from AcceptableAnswers import *
+from ItemTypes import *
 
 def main():
 
@@ -13,13 +14,22 @@ def main():
     humanoid_type = question("Do you want to be a dwarf or goblin?", [["dwarf", "goblin"]])
     name = input("What is your name?")
     gender = question("What is your gender?", [["male", "female"]])
+    weapon = question("What type of weapon do you want? (sword, axe)?", [["sword", "axe"]])
     player = create_humanoid(humanoid_type, name, gender, player=True)
+    if weapon == "sword":
+        player.items.append(Sword(assigned=True, item_type="sword", material="bronze", condition="new"))
+    elif weapon == "axe":
+        player.items.append(Axe(assigned=True, item_type="axe", material="bronze", condition="new"))
+
+    list_of_acceptable_look_at_player_commands = ["look at " + player.name.lower()]
+
 
     # Initialize npc settings.
     probability_that_npc_will_move = 50  # This is given in percentage.
     npcs = create_npcs(4)
-    assign_npcs_items(npcs)
     for npc in npcs:
+        weapon = random.choice(["sword", "axe"])
+        assign_npc_item(npc, weapon)
         print(npc.name)
         print(npc.items)
 
@@ -59,7 +69,6 @@ def main():
     npcs[2].room = room_3
     npcs[3].room = room_3
 
-    list_of_acceptable_look_at_player_commands = []
     for npc in npcs:
         list_of_acceptable_look_at_player_commands.append("look at " + npc.name.lower())
     acceptable_answers.append(list_of_acceptable_look_at_player_commands)

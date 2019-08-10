@@ -5,11 +5,11 @@ class Humanoid:
     """
     This class represents a humanoid.
     """
-    def __init__(self, name="no_name", gender="male", health=100, items=[], visibility=100, player=False):
+    def __init__(self, name="no_name", gender="male", health=100, visibility=100, player=False):
         self.name = name
         self.gender = gender
         self.health = health
-        self.items = items
+        self.items = []
         self.visibility = visibility
         self.description = self.name + " is a humanoid."
         self.player = player
