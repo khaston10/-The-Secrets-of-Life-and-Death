@@ -13,6 +13,7 @@ class Humanoid:
         self.visibility = visibility
         self.description = self.name + " is a humanoid."
         self.player = player
+        self.carrying_capacity = 5
         # This attribute is only initialized after rooms have been created. It is an instance of a location.
         self.room = ""
 
@@ -84,6 +85,8 @@ class Humanoid:
                 else:
                     description += "a " + str(item.get_description()) + "."
             return description
+
+
 
 
 

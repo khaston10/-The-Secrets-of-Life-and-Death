@@ -39,6 +39,180 @@ def create_humanoid(type, name, gender, player):
         return Goblin(name=name, gender=gender, player=player)
 
 
+def player_take_item_from_container(player):
+    """
+    This method handles a player trying to take an item from container.
+    :return: None
+    """
+    if len(player.room.containers) == 0:
+        print("There are no containers in this room.")
+    elif len(player.room.containers) == 1:
+        if player.room.containers[0].is_open and len(player.room.containers[0].contents) != 0:
+            options = ""
+            option_number = []
+            for i in range(len(player.room.containers[0].contents)):
+                options += "[" + str(i) + "] " + player.room.containers[0].contents[i].get_description() + "\n"
+                option_number.append(str(i))
+            print(options)
+            num = question("Which item would you like to take?", option_number)
+            if len(player.items) < player.carrying_capacity:
+                item = player.room.containers[0].contents[int(num)]
+                player.room.containers[0].remove_item(item)
+                player.items.append(item)
+                print("The " + item.get_description() + " has been added to your inventory.\n")
+            else:
+                print("Your inventory is full.")
+        elif len(player.room.containers[0].contents) == 0:
+            print("There are no items in container.")
+        else:
+            print("The container is not open.")
+    else:
+        options = ""
+        option_number = []
+        for i in range(len(player.room.containers)):
+            options += "[" + str(i) + "] " + player.room.containers[i].get_description() + "\n"
+            option_number.append(str(i))
+        print(options)
+        num_container = question("From which container?", option_number)
+        if player.room.containers[int(num_container)].is_open and len(player.room.containers[int(num_container)].contents):
+            options = ""
+            option_number = []
+            for i in range(len(player.room.containers[int(num_container)].contents)):
+                options += "[" + str(i) + "] " + player.room.containers[int(num_container)].contents[i].get_description() + "\n"
+                option_number.append(str(i))
+            print(options)
+            num = question("Which item would you like to take?", option_number)
+            if len(player.items) < player.carrying_capacity:
+                item = player.room.containers[int(num_container)].contents[int(num)]
+                player.room.containers[int(num_container)].remove_item(item)
+                player.items.append(item)
+                print("The " + item.get_description() + " has been added to your inventory.\n")
+            else:
+                print("Your inventory is full.")
+        elif len(player.room.containers[int(num_container)].contents) == 0:
+            print("There are no items in container.")
+        else:
+            print("The container is not open.")
+
+
+def player_put_item_in_container(player):
+    """
+    This method handles a player trying to put an item into a container.
+    :return: None
+    """
+    if len(player.room.containers) == 0:
+        print("There are no containers in this room.")
+    elif len(player.room.containers) == 1:
+        if player.room.containers[0].is_open and len(player.items) != 0:
+            options = ""
+            option_number = []
+            for i in range(len(player.items)):
+                options += "[" + str(i) + "] " + player.items[i].get_description() + "\n"
+                option_number.append(str(i))
+            print(options)
+            num = question("Which item would you like to put in the container?", option_number)
+            if len(player.room.containers[0].contents) < player.room.containers[0].capacity:
+                item = player.items[int(num)]
+                player.room.containers[0].add_item(item)
+                player.items.remove(item)
+                print("The " + item.get_description() + " has been added to the container. \n")
+            else:
+                print("Your inventory is full.")
+        elif len(player.items) == 0:
+            print("There are no items in your inventory.")
+        else:
+            print("The container is not open.")
+    else:
+        options = ""
+        option_number = []
+        for i in range(len(player.room.containers)):
+            options += "[" + str(i) + "] " + player.room.containers[i].get_description() + "\n"
+            option_number.append(str(i))
+        print(options)
+        num_container = question("In which container?", option_number)
+        if player.room.containers[int(num_container)].is_open and len(player.items) != 0:
+            options = ""
+            option_number = []
+            for i in range(len(player.items)):
+                options += "[" + str(i) + "] " + player.items[i].get_description() + "\n"
+                option_number.append(str(i))
+            print(options)
+            num = question("Which item would you like to put in container?", option_number)
+            if len(player.room.containers[int(num_container)].contents) < player.room.containers[int(num_container)].capacity:
+                item = player.items[int(num)]
+                player.room.containers[int(num_container)].add_item(item)
+                player.items.remove(item)
+                print("The " + item.get_description() + " has been added to the container.\n")
+            else:
+                print("The container is full.")
+        elif len(player.items) == 0:
+            print("There are no items in your inventory.")
+        else:
+            print("The container is not open.")
+
+
+def player_close_container(player):
+    """
+    Handles player closing container.
+    :param player: Instance of player.
+    :return: None
+    """
+    if len(player.room.containers) == 1:
+        if player.room.containers[0].is_open:
+            player.room.containers[0].close_container()
+            print("The container has been closed.")
+            time = "move forward"
+        else:
+            print("This container is already closed.")
+    elif len(player.room.containers) > 1:
+        options = ""
+        option_number = []
+        for i in range(len(player.room.containers)):
+            options += "[" + str(i) + "] " + player.room.containers[i].get_description() + "\n"
+            option_number.append(str(i))
+        print(options)
+        num = question("Which container do you want to close?", option_number)
+        if player.room.containers[int(num)].is_open:
+            player.room.containers[int(num)].close_container()
+            print("The container has been closed.")
+            time = "move forward"
+        else:
+            print("This container is already closed.")
+    else:
+        print("There are no containers in this room.")
+
+
+def player_open_container(player):
+    """
+    Handles player opening container.
+    :param player: Instance of player.
+    :return: None
+    """
+    if len(player.room.containers) == 1:
+        if not player.room.containers[0].is_open:
+            player.room.containers[0].open_container()
+            print("The container has been opened.")
+            time = "move forward"
+        else:
+            print("This container is already open.")
+    elif len(player.room.containers) > 1:
+        options = ""
+        option_number = []
+        for i in range(len(player.room.containers)):
+            options += "[" + str(i) + "] " + player.room.containers[i].get_description() + "\n"
+            option_number.append(str(i))
+        print(options)
+        num = question("Which container do you want to open?", option_number)
+        if not player.room.containers[int(num)].is_open:
+            player.room.containers[int(num)].open_container()
+            print("The container has been opened.")
+            time = "move forward"
+        else:
+            print("This container is already open.")
+    else:
+        print("There are no containers in this room.")
+
+
 def create_npcs(number_of_npcs):
     """
     This function returns a list of humanoid objects, they will all have unique names.
@@ -152,6 +326,7 @@ def create_containers_with_random_items(number_of_containers):
 
     return list_of_containers
 
+
 def create_location(type):
     """
     This function creates one location based upon the type.
@@ -223,9 +398,9 @@ def print_help_menu():
     print("---------------------------------------------------------------------------------------------------------\n")
 
 
-def print_game_intro():
+def print_game_logo():
     """
-    This function prints the game intro information.
+    This function prints the game logo.
     :return: None
     """
 
@@ -247,6 +422,16 @@ def print_game_intro():
     print("| ,-. ,-. ,-|   ' |   \ ,-. ,-. |- |-. |")
     print("| ,-| | | | |   , |   / |-' ,-| |  | | |")
     print("| `-^ ' ' `-'   `-^--'  `-' `-^ `' ' ' |")
+    print("----------------------------------------")
+    print("\n")
+
+
+def print_game_intro():
+    """
+    This function prints the game intro information.
+    :return: None
+    """
+
     print("\n---------------------------------------------------------------------------------------------------------")
     print("At last, your search is over! You found the infamous tower! Rumor has it, a necromancer resides here. \n"
           "Be on guard. You know what you are here to do, the time for action is nigh.")
