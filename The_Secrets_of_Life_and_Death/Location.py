@@ -6,6 +6,7 @@ class Location:
         self.name = name
         self.description = description
         self.items = []
+        self.containers = []
         self.characters = []
         self.exits = {}  # This is a dictionary of the form {"location of exit": room}
         self.light_level = light_level
@@ -32,6 +33,24 @@ class Location:
             description += "There are " + str(number_of_characters) + " humanoids in this room."
         for char in self.characters:
             description += "\n" + char.get_description()
+
+        return description + "\n"
+
+    def get_description_of_containers_in_room(self):
+        """
+        This function returns a description of containers in room.
+        :return: string
+        """
+        description = ""
+        number_of_containers = len(self.containers)
+        if number_of_containers == 0:
+            description += "There are no containers in this room."
+        elif number_of_containers == 1:
+            description += "There is " + str(number_of_containers) + " container in this room."
+        else:
+            description += "There are " + str(number_of_containers) + " containers in this room."
+        for container in self.containers:
+            description += "\n" + container.get_description()
 
         return description + "\n"
 

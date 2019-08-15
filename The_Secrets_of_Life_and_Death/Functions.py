@@ -1,6 +1,7 @@
 from HumanoidTypes import *
 from LocationTypes import *
 from ItemTypes import *
+from Container import Container
 from Location import Location
 from Humanoid import Humanoid
 from AcceptableAnswers import *
@@ -81,7 +82,7 @@ def create_weapon(type_of_weapon, material, condition="new"):
     """
     This function creates a weapon.
     :param type_of_weapon: String. Acceptable types at this point are ["sword", "axe"]
-    :param material: String. Acceptable types at this point are ["bronze", "copper", "silver" "iron"]
+    :param material: String. Acceptable types at this point are ["bronze", "copper", "silver" ,"iron"]
     :param condition: String. Acceptable condition at this point are ["broken", "used", "new"]
     :return: None
     """
@@ -92,6 +93,64 @@ def create_weapon(type_of_weapon, material, condition="new"):
         axe = Axe(material=material, condition=condition, item_type="axe")
         return axe
 
+
+def create_armour(type_of_armour, material, condition="new"):
+    """
+    This function creates an item of armour.
+    :param type_of_armour: String. Acceptable types at this point are ["shield", "helmet"]
+    :param material: String. Acceptable types at this point are ["bronze", "copper", "silver" ,"iron"]
+    :param condition: String. Acceptable condition at this point are ["broken", "used", "new"]
+    :return: None
+    """
+    if type_of_armour == "shield":
+        shield = Shield(material=material, condition=condition, item_type="shield")
+        return shield
+    elif type_of_armour == "helmet":
+        helmet = Helmet(material=material, condition=condition, item_type="helmet")
+        return helmet
+
+
+def create_container(weapon_amt=0, armour_amt=0):
+    """
+    Creates a container and adds items. If no items are entered it will create an empty container.
+    Can carry 5 items by default.
+    :param weapon_amt: Integer, the amount of weapons to put in container.
+    :param armour_amt: Integer, the amount of weapons to put in container.
+    :return: container object
+    """
+    container = Container()
+    list_of_items = []
+
+    # Create random weapons.
+    for i in range(weapon_amt):
+        list_of_items.append(create_weapon(type_of_weapon=random.choice(["sword", "axe"]), material=random.choice(
+            ["bronze", "copper", "silver", "iron"]), condition=random.choice(["broken", "used", "new"])))
+
+    # Create random armour.
+    for i in range(armour_amt):
+        list_of_items.append(create_armour(type_of_armour=random.choice(["shield", "helmet"]), material=random.choice(
+            ["bronze", "copper", "silver", "iron"]), condition=random.choice(["broken", "used", "new"])))
+
+    # Add items to the container.
+    container.is_open = True
+    for item in list_of_items:
+        container.add_item(item)
+    container.is_open = False
+
+    return container
+
+
+def create_containers_with_random_items(number_of_containers):
+    """
+    Creates a list of containers filled with random items.
+    :param number_of_containers: Integer, the amount o f containers to create.
+    :return: list of containers.
+    """
+    list_of_containers = []
+    for i in range(number_of_containers):
+        list_of_containers.append(create_container(weapon_amt=3, armour_amt=0))
+
+    return list_of_containers
 
 def create_location(type):
     """
@@ -142,6 +201,8 @@ def print_game_information(list_of_rooms):
         for char in room.characters:
             character_list.append(char.name)
         print(room.name + "\n" + "Player names: " + str(character_list))
+        for container in room.containers:
+            print(container.get_description())
 
 
 def print_help_menu():

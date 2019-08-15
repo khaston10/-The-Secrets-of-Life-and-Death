@@ -46,18 +46,17 @@ def main():
         list_of_acceptable_look_at_player_commands.append("look at " + npc.name.lower())
     acceptable_answers.append(list_of_acceptable_look_at_player_commands)
 
+    list_of_containers = create_containers_with_random_items(50)
+    map_scatter_containers(list_of_containers, list_of_rooms)
+
     # Main game loop____________________________________________________________
     print_game_intro()
     game = True
 
     while game:
 
-
-    # This line is put here for game testing purposes. It will print to screen all game objects and their locations.
-        # print_game_information(list_of_rooms)
-
         # This line is put here for game testing purposes. It will print to screen all game objects and their locations.
-        print_game_information(list_of_rooms)
+        # print_game_information(list_of_rooms)
 
 
         time = "stay"
@@ -92,6 +91,56 @@ def main():
                     player.go(player.room.exits["south"])
                     player.room.add_character(player)
                     time = "move forward"
+            elif action in open_container:
+                if len(player.room.containers) == 1:
+                    if not player.room.containers[0].is_open:
+                        player.room.containers[0].open_container()
+                        print("The container has been opened.")
+                        time = "move forward"
+                    else:
+                        print("This container is already open.")
+                elif len(player.room.containers) > 1:
+                    options = ""
+                    option_number = []
+                    for i in range(len(player.room.containers)):
+                        options += "[" + str(i) + "] " + player.room.containers[i].get_description() + "\n"
+                        option_number.append(str(i))
+                    print(options)
+                    num = question("Which container do you want to open?", option_number)
+                    if not player.room.containers[int(num)].is_open:
+                        player.room.containers[int(num)].open_container()
+                        print("The container has been opened.")
+                        time = "move forward"
+                    else:
+                        print("This container is already open.")
+                else:
+                    print("There are no containers in this room.")
+
+            elif action in close_container:
+                if len(player.room.containers) == 1:
+                    if player.room.containers[0].is_open:
+                        player.room.containers[0].close_container()
+                        print("The container has been closed.")
+                        time = "move forward"
+                    else:
+                        print("This container is already closed.")
+                elif len(player.room.containers) > 1:
+                    options = ""
+                    option_number = []
+                    for i in range(len(player.room.containers)):
+                        options += "[" + str(i) + "] " + player.room.containers[i].get_description() + "\n"
+                        option_number.append(str(i))
+                    print(options)
+                    num = question("Which container do you want to close?", option_number)
+                    if player.room.containers[int(num)].is_open:
+                        player.room.containers[int(num)].close_container()
+                        print("The container has been closed.")
+                        time = "move forward"
+                    else:
+                        print("This container is already closed.")
+                else:
+                    print("There are no containers in this room.")
+
             elif action in cmd_help:
                 print_help_menu()
             elif action in look:
