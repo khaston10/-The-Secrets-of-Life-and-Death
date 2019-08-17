@@ -12,6 +12,7 @@ from ItemTypes import *
 def main():
 
     # Initialize game settings__________________________________________________
+    print_game_logo()
 
     # Initialize player settings.
     humanoid_type = question("Do you want to be a dwarf or goblin?", [["dwarf", "goblin"]])
@@ -46,10 +47,12 @@ def main():
         list_of_acceptable_look_at_player_commands.append("look at " + npc.name.lower())
     acceptable_answers.append(list_of_acceptable_look_at_player_commands)
 
-    # Main game loop____________________________________________________________
-    print_game_intro()
-    game = True
+    list_of_containers = create_containers_with_random_items(10)
+    map_scatter_containers(list_of_containers, list_of_rooms)
 
+    # Main game loop____________________________________________________________
+    game = True
+    print_game_intro()
     while game:
 
         # This line is put here for game testing purposes. It will print to screen all game objects and their locations.
@@ -87,6 +90,14 @@ def main():
                     player.go(player.room.exits["south"])
                     player.room.add_character(player)
                     time = "move forward"
+            elif action in open_container:
+                player_open_container(player)
+            elif action in close_container:
+                player_close_container(player)
+            elif action in take_item_from_container:
+                player_take_item_from_container(player)
+            elif action in put_item_in_container:
+                player_put_item_in_container(player)
             elif action in cmd_help:
                 print_help_menu()
             elif action in look:

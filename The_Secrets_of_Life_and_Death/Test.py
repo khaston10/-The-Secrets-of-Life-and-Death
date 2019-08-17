@@ -1,24 +1,10 @@
-class Object:
-    """
-    This is a test class.
-    """
-    def __init__(self, name="no_name"):
-        self.name= name
+from Container import Container
+from Item import Item
+from ItemTypes import *
+import random
+from Functions import *
 
-class Object2:
-    def __init__(self, name="no_name"):
-        self.name=name
+list_of_containers = create_containers_with_random_items(5)
 
-list_of_objects = []
-
-a = Object("A")
-b = Object2("B")
-c = Object("C")
-d = Object("D")
-
-list_of_objects.append(a)
-list_of_objects.append(b)
-list_of_objects.append(c)
-
-if a in list_of_objects:
-    print("True")
+for container in list_of_containers:
+    print(container.get_description())

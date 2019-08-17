@@ -24,6 +24,6 @@ class Item:
         :return: String.
         """
         description = ""
-        description += self.condition + " " + self.material + " " + self.item_type + " "
+        description += self.condition + " " + self.material + " " + self.item_type
         return description
 

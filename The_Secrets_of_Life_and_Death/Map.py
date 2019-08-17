@@ -95,3 +95,8 @@ def map_scatter_chars(in_player, in_npcs, in_list_of_rooms):
     for npc in in_npcs:
         npc.room = in_list_of_rooms[random.randint(0, len(in_list_of_rooms)-1)]
         npc.room.add_character(npc)
+
+def map_scatter_containers(in_containers, in_list_of_rooms):
+    for container in in_containers:
+        in_list_of_rooms[random.randint(0, len(in_list_of_rooms)-1)].containers.append(container)
+
