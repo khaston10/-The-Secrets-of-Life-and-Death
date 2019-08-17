@@ -90,7 +90,7 @@ def map_init(in_seed, in_max_num_rooms):
 
 
 def map_scatter_chars(in_player, in_npcs, in_list_of_rooms):
-    in_player.room = in_list_of_rooms[random.randint(1, len(in_list_of_rooms))]
+    in_player.room = in_list_of_rooms[random.randint(0, len(in_list_of_rooms)-1)]
     in_player.room.add_character(in_player)
     for npc in in_npcs:
         npc.room = in_list_of_rooms[random.randint(0, len(in_list_of_rooms)-1)]
