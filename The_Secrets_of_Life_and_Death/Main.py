@@ -23,6 +23,7 @@ def main():
         player.items.append(Sword(assigned=True, item_type="sword", material="bronze", condition="new"))
     elif weapon == "axe":
         player.items.append(Axe(assigned=True, item_type="axe", material="bronze", condition="new"))
+    list_of_acceptable_look_at_player_commands = ["look at " + player.name.lower()]
 
     # Initialize locations.
     seed = 666
@@ -51,13 +52,8 @@ def main():
 
     while game:
 
-<<<<<<< HEAD
-    # This line is put here for game testing purposes. It will print to screen all game objects and their locations.
-        # print_game_information(list_of_rooms)
-=======
         # This line is put here for game testing purposes. It will print to screen all game objects and their locations.
-        print_game_information(list_of_rooms)
->>>>>>> 3c282292bd551268afd073c2fc5ed40709b1304c
+        # print_game_information(list_of_rooms)
 
         time = "stay"
         while time != "move forward":

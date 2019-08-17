@@ -10,6 +10,7 @@ class Location:
         self.exits = {}  # This is a dictionary of the form {"location of exit": room}
         self.light_level = light_level
         self.room_Capacity = room_capacity
+        self.coordinates = [0, 0]
 
     def get_description(self):
         """
