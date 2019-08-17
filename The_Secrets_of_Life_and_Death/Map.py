@@ -79,7 +79,7 @@ def map_init(in_seed, in_max_num_rooms):
 
     # Print a rudimentary map.
     for y in range(max_y-1, -1, -1):
-        for x in range(0, max_x-1):
+        for x in range(0, max_x):
             if taken[x][y]:
                 print('O', end='')
             else:
