@@ -3,6 +3,27 @@ import random
 
 m_directions = ['north', 'south', 'east', 'west']
 
+
+def print_maps(in_list_of_rooms):
+    max_x = len(in_list_of_rooms)
+    max_y = max_x
+    # Denotes whether or not a set or coordinates are occupied. Initialize all to False.
+    taken = [[False]*max_x for j in range(max_y)]
+
+    # Mark coordinates to all rooms as True.
+    for room in in_list_of_rooms:
+        taken[room.coordinates[0]][room.coordinates[1]] = True
+
+    # Print a rudimentary map.
+    for y in range(max_y-1, -1, -1):
+        for x in range(0, max_x):
+            if taken[x][y]:
+                print('O', end='')
+            else:
+                print('.', end='')
+        print('\n')
+
+
 def map_init(in_seed, in_max_num_rooms):
     random.seed(in_seed)
     list_of_rooms = []
@@ -75,16 +96,9 @@ def map_init(in_seed, in_max_num_rooms):
     # Let unconnected rooms bark about it.
     for room in list_of_rooms:
         if len(room.exits) == 0:
-            print('Room ' + str(room) + ' is lonely :(')
+            print('Room ' + str(room) + ' is lonely :(')  # TODO: Fix whatever lands here.
 
-    # Print a rudimentary map.
-    for y in range(max_y-1, -1, -1):
-        for x in range(0, max_x):
-            if taken[x][y]:
-                print('O', end='')
-            else:
-                print('.', end='')
-        print('\n')
+    print_maps(list_of_rooms)
 
     return list_of_rooms
 

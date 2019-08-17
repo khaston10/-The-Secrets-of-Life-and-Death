@@ -7,6 +7,7 @@ from Functions import *
 from AcceptableAnswers import *
 from random import randint
 from ItemTypes import *
+from Map import print_maps
 
 
 def main():
@@ -98,6 +99,8 @@ def main():
                 player_take_item_from_container(player)
             elif action in put_item_in_container:
                 player_put_item_in_container(player)
+            elif action in show_map:
+                print_maps(list_of_rooms)
             elif action in cmd_help:
                 print_help_menu()
             elif action in look:
