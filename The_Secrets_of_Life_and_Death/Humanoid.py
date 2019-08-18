@@ -5,11 +5,14 @@ class Humanoid:
     """
     This class represents a humanoid.
     """
-    def __init__(self, name="no_name", gender="male", health=100, visibility=100, player=False):
+    def __init__(self, name="no_name", gender="male", mood="content", health=100, visibility=100, player=False):
         self.name = name
         self.gender = gender
+        self.mood = mood
         self.health = health
-        self.items = []
+        self.backpack = []
+        self.left_hand = []
+        self.right_hand = []
         self.visibility = visibility
         self.description = self.name + " is a humanoid."
         self.player = player
@@ -49,44 +52,61 @@ class Humanoid:
 
     def look_at_character(self, name):
         """
-        This function returns a desrciption of the character if he/she is in the same room.
+        This function returns a description of the character if he/she is in the same room.
         :param name: name of humanoid object
         :return: string
         """
         description = ""
-        list_of_characters = self.room.characters
-        list_of_character_names = []
-        for char in list_of_characters:
-            list_of_character_names.append(char.name.lower())
-        if name in list_of_character_names:
-            index = list_of_character_names.index(name)
-            description += list_of_characters[index].get_description() + "\n"
-            description += list_of_characters[index].name + " has: " + list_of_characters[index].get_description_of_items()
-            return description
-        else:
-            description += name + " not found."
-            return description
 
-    def get_description_of_items(self):
+        description += self.get_description() + "\n"
+        description += self.name + "'s right hand: " + self.get_description_of_item_in_right_hand() + "\n"
+        description += self.name + "'s Left hand: " + self.get_description_of_item_in_left_hand() + "\n"
+        description += self.name + "'s backpack: " + self.get_description_of_items_in_backpack()
+        return description
+
+
+    def get_description_of_items_in_backpack(self):
         """
         This function returns a description of items the humanoid has.
         :return: List of items
         """
         description = ""
         weapons = ""
-        if len(self.items) == 0:
+        if len(self.backpack) == 0:
             description = self.name + " has no items."
             return description
-        elif len(self.items) >= 1:
+        elif len(self.backpack) >= 1:
             count = 0
-            for item in self.items:
-                if count < len(self.items):
+            for item in self.backpack:
+                if count < len(self.backpack):
                     description += "a " + str(item.get_description()) + ", "
                 else:
                     description += "a " + str(item.get_description()) + "."
             return description
 
+    def get_description_of_item_in_right_hand(self):
+        """
+        Returns a string of item held by humanoid in right hand.
+        :return: String
+        """
+        description = "empty"
 
+        if len(self.right_hand) != 0:
+            description = self.right_hand[0].get_description()
+            return description
+        else:
+            return description
 
+    def get_description_of_item_in_left_hand(self):
+        """
+        Returns a string of item held by humanoid in left hand.
+        :return: String
+        """
+        description = "empty"
 
+        if len(self.left_hand) != 0:
+            description = self.left_hand[0].get_description()
+            return description
+        else:
+            return description
 

@@ -1,0 +1,1 @@
+humanoid_names = {"dwarf": ["Thatmig", "Ostar", "Lokoki", "Graghik"], "goblin": ["Krasb", "Zruq", "Vrois", "Zex"]}

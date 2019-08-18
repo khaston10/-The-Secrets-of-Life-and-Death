@@ -8,6 +8,8 @@ from AcceptableAnswers import *
 from random import randint
 from ItemTypes import *
 from Map import print_maps
+from HumanoidNames import humanoid_names
+from HumanoidMoods import humanoid_moods
 
 
 def main():
@@ -20,11 +22,11 @@ def main():
     name = input("What is your name?")
     gender = question("What is your gender?", [["male", "female"]])
     weapon = question("What type of weapon do you want? (sword, axe)?", [["sword", "axe"]])
-    player = create_humanoid(humanoid_type, name, gender, player=True)
+    player = create_humanoid(humanoid_type, name, gender, mood=humanoid_moods[0], player=True)
     if weapon == "sword":
-        player.items.append(Sword(assigned=True, item_type="sword", material="bronze", condition="new"))
+        player.backpack.append(Sword(assigned=True, item_type="sword", material="bronze", condition="new"))
     elif weapon == "axe":
-        player.items.append(Axe(assigned=True, item_type="axe", material="bronze", condition="new"))
+        player.backpack.append(Axe(assigned=True, item_type="axe", material="bronze", condition="new"))
     list_of_acceptable_look_at_player_commands = ["look at " + player.name.lower()]
 
     # Initialize locations.
@@ -34,7 +36,7 @@ def main():
 
     # Initialize npc settings.
     probability_that_npc_will_move = 50  # This is given in percentage.
-    npcs = create_npcs(4)
+    npcs = create_npcs(4, humanoid_names, humanoid_moods)
     for npc in npcs:
         weapon = random.choice(["sword", "axe"])
         assign_npc_item(npc, weapon)
@@ -47,6 +49,8 @@ def main():
     for npc in npcs:
         list_of_acceptable_look_at_player_commands.append("look at " + npc.name.lower())
     acceptable_answers.append(list_of_acceptable_look_at_player_commands)
+    list_of_humanoids = npcs.copy()
+    list_of_humanoids.append(player)
 
     list_of_containers = create_containers_with_random_items(10)
     map_scatter_containers(list_of_containers, list_of_rooms)
@@ -55,7 +59,6 @@ def main():
     game = True
     print_game_intro()
     while game:
-
         # This line is put here for game testing purposes. It will print to screen all game objects and their locations.
         # print_game_information(list_of_rooms)
 
@@ -93,12 +96,19 @@ def main():
                     time = "move forward"
             elif action in open_container:
                 player_open_container(player)
+                time = "move forward"
             elif action in close_container:
                 player_close_container(player)
+                time = "move forward"
             elif action in take_item_from_container:
                 player_take_item_from_container(player)
+                time = "move forward"
             elif action in put_item_in_container:
                 player_put_item_in_container(player)
+                time = "move forward"
+            elif action in put_item_in_backpack:
+                player_put_item_in_backpack(player)
+                time = "move forward"
             elif action in show_map:
                 print_maps(list_of_rooms)
             elif action in cmd_help:
@@ -106,7 +116,8 @@ def main():
             elif action in look:
                 print(player.look())
             elif action in list_of_acceptable_look_at_player_commands:
-                print(player.look_at_character(action[8:len(action)]))
+                hum = get_humanoid_object_from_look_command(action, list_of_humanoids)
+                print(look_at_humanoid(hum))
 
         # Update NPCs.
         # Pick the NPCs to move.

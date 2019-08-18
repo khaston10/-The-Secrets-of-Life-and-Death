@@ -24,19 +24,20 @@ def question(question, answers=acceptable_answers):
     return temp_answer
 
 
-def create_humanoid(type, name, gender, player):
+def create_humanoid(type, name, gender, mood, player):
     """
     This function creates a humanoid of type, and returns it.
     :param type: string, currently it can be "dwarf" or "goblin"
     :param name: string
     :param gender: string, currently it can be "male" or "female"
+    :param mood: string, humanoids mood.
     :return: Humanoid object.
     """
     if type == "dwarf" or type == "Dwarf":
-        return Dwarf(name=name, gender=gender, player=player)
+        return Dwarf(name=name, gender=gender, mood=mood, player=player)
 
     elif type == "goblin" or type == "Goblin":
-        return Goblin(name=name, gender=gender, player=player)
+        return Goblin(name=name, gender=gender, mood=mood, player=player)
 
 
 def player_take_item_from_container(player):
@@ -55,13 +56,18 @@ def player_take_item_from_container(player):
                 option_number.append(str(i))
             print(options)
             num = question("Which item would you like to take?", option_number)
-            if len(player.items) < player.carrying_capacity:
+            if not player.right_hand:  # is right hand empty?
                 item = player.room.containers[0].contents[int(num)]
                 player.room.containers[0].remove_item(item)
-                player.items.append(item)
-                print("The " + item.get_description() + " has been added to your inventory.\n")
+                player.right_hand.append(item)
+                print("Your grab the " + item.get_description() + " with your right hand.\n")
+            elif len(player.left_hand) < 1:
+                item = player.room.containers[0].contents[int(num)]
+                player.room.containers[0].remove_item(item)
+                player.left_hand.append(item)
+                print("Your grab the " + item.get_description() + " with your left hand.\n")
             else:
-                print("Your inventory is full.")
+                print("Your hands are full.")
         elif len(player.room.containers[0].contents) == 0:
             print("There are no items in container.")
         else:
@@ -82,13 +88,18 @@ def player_take_item_from_container(player):
                 option_number.append(str(i))
             print(options)
             num = question("Which item would you like to take?", option_number)
-            if len(player.items) < player.carrying_capacity:
+            if len(player.right_hand) < 1:
                 item = player.room.containers[int(num_container)].contents[int(num)]
                 player.room.containers[int(num_container)].remove_item(item)
-                player.items.append(item)
-                print("The " + item.get_description() + " has been added to your inventory.\n")
+                player.right_hand.append(item)
+                print("Your grab the " + item.get_description() + " with your right hand.\n")
+            elif len(player.left_hand) < 1:
+                item = player.room.containers[int(num_container)].contents[int(num)]
+                player.room.containers[int(num_container)].remove_item(item)
+                player.left_hand.append(item)
+                print("Your grab the " + item.get_description() + " with your left hand.\n")
             else:
-                print("Your inventory is full.")
+                print("Your hands are full.")
         elif len(player.room.containers[int(num_container)].contents) == 0:
             print("There are no items in container.")
         else:
@@ -103,23 +114,38 @@ def player_put_item_in_container(player):
     if len(player.room.containers) == 0:
         print("There are no containers in this room.")
     elif len(player.room.containers) == 1:
-        if player.room.containers[0].is_open and len(player.items) != 0:
+        if player.room.containers[0].is_open and (player.left_hand or player.right_hand):
             options = ""
             option_number = []
-            for i in range(len(player.items)):
-                options += "[" + str(i) + "] " + player.items[i].get_description() + "\n"
-                option_number.append(str(i))
-            print(options)
-            num = question("Which item would you like to put in the container?", option_number)
-            if len(player.room.containers[0].contents) < player.room.containers[0].capacity:
-                item = player.items[int(num)]
+            if player.left_hand and player.right_hand:
+                options += "[0]" + player.left_hand[0].get_description() + "\n"
+                options += "[1]" + player.right_hand[0].get_description() + "\n"
+                option_number = ["0", "1"]
+                print(options)
+                num = question("Which item would you like to put in the container?", option_number)
+                if num == '0':
+                    item = player.left_hand[0]
+                    player.left_hand.remove(item)
+                    player.room.containers[0].add_item(item)
+                    print("The " + item.get_description() + " has been added to the container. \n")
+                else:
+                    item = player.right_hand[0]
+                    player.right_hand.remove(item)
+                    player.room.containers[0].add_item(item)
+                    print("The " + item.get_description() + " has been added to the container. \n")
+            elif player.left_hand:
+                item = player.left_hand[0]
+                player.left_hand.remove(item)
                 player.room.containers[0].add_item(item)
-                player.items.remove(item)
                 print("The " + item.get_description() + " has been added to the container. \n")
             else:
-                print("Your inventory is full.")
-        elif len(player.items) == 0:
-            print("There are no items in your inventory.")
+                item = player.right_hand[0]
+                player.right_hand.remove(item)
+                player.room.containers[0].add_item(item)
+                print("The " + item.get_description() + " has been added to the container. \n")
+
+        elif player.room.containers[0].is_open:
+            print("You are not holding anything.")
         else:
             print("The container is not open.")
     else:
@@ -130,26 +156,72 @@ def player_put_item_in_container(player):
             option_number.append(str(i))
         print(options)
         num_container = question("In which container?", option_number)
-        if player.room.containers[int(num_container)].is_open and len(player.items) != 0:
+        if player.room.containers[int(num_container)].is_open and (player.left_hand or player.right_hand):
             options = ""
             option_number = []
-            for i in range(len(player.items)):
-                options += "[" + str(i) + "] " + player.items[i].get_description() + "\n"
-                option_number.append(str(i))
-            print(options)
-            num = question("Which item would you like to put in container?", option_number)
-            if len(player.room.containers[int(num_container)].contents) < player.room.containers[int(num_container)].capacity:
-                item = player.items[int(num)]
+            if player.left_hand and player.right_hand:
+                options += "[0]" + player.left_hand[0].get_description() + "\n"
+                options += "[1]" + player.right_hand[0].get_description() + "\n"
+                option_number = ["0", "1"]
+                print(options)
+                num = question("Which item would you like to put in the container?", option_number)
+                if num == '0':
+                    item = player.left_hand[0]
+                    player.left_hand.remove(item)
+                    player.room.containers[int(num_container)].add_item(item)
+                    print("The " + item.get_description() + " has been added to the container. \n")
+                else:
+                    item = player.right_hand[0]
+                    player.right_hand.remove(item)
+                    player.room.containers[int(num_container)].add_item(item)
+                    print("The " + item.get_description() + " has been added to the container. \n")
+            elif player.left_hand:
+                item = player.left_hand[0]
+                player.left_hand.remove(item)
                 player.room.containers[int(num_container)].add_item(item)
-                player.items.remove(item)
-                print("The " + item.get_description() + " has been added to the container.\n")
+                print("The " + item.get_description() + " has been added to the container. \n")
+
             else:
-                print("The container is full.")
-        elif len(player.items) == 0:
-            print("There are no items in your inventory.")
+                item = player.right_hand[0]
+                player.right_hand.remove(item)
+                player.room.containers[int(num_container)].add_item(item)
+                print("The " + item.get_description() + " has been added to the container. \n")
+        elif player.room.containers[int(num_container)].is_open:
+            print("You are not holding anything.")
         else:
             print("The container is not open.")
 
+
+def player_put_item_in_backpack(player):
+    """
+    Puts item from player's hand into backpack.
+    :param player: instance of humanoid.
+    :return: None
+    """
+    if not player.right_hand and not player.left_hand:
+        print("There is nothing to put in backpack.")
+
+    elif not player.left_hand:
+        item = player.right_hand[0]
+        player.right_hand.remove(item)
+        player.backpack.append(item)
+        print("The " + item.get_description() + " has been added to your backpack.")
+
+    elif not player.right_hand:
+        item = player.left_hand[0]
+        player.left_hand.remove(item)
+        player.backpack.append(item)
+        print("The " + item.get_description() + " has been added to your backpack.")
+
+    else:
+        item_1 = player.right_hand[0]
+        player.right_hand.remove(item_1)
+        item_2 = player.left_hand[0]
+        player.left_hand.remove(item_2)
+        player.backpack.append(item_1)
+        player.backpack.append(item_2)
+        print("The " + item_1.get_description() + " and " + item_2.get_description()
+              + " have been added to your backpack.")
 
 def player_close_container(player):
     """
@@ -206,28 +278,56 @@ def player_open_container(player):
         if not player.room.containers[int(num)].is_open:
             player.room.containers[int(num)].open_container()
             print("The container has been opened.")
-            time = "move forward"
         else:
             print("This container is already open.")
     else:
         print("There are no containers in this room.")
 
 
-def create_npcs(number_of_npcs):
+def get_humanoid_object_from_look_command(action, list_of_humanoids):
+    """
+    This function was created to keep the main game loop clean. It returns the humanoid object when player enters the
+    command: look at 'humanoid's name'. The return for this function is typically passed into look_at_humanoid.
+    :param action: String of the form, look at 'humanoid's name'
+    :param list_of_humanoids: List of humanoids in game.
+    :return: instance of the humanoid class.
+    """
+    humanoid_name = action[8:len(action)]
+    list_of_humanoid_names = []
+
+    for humanoid in list_of_humanoids:
+        list_of_humanoid_names.append(humanoid.name.lower())
+
+    if humanoid_name in list_of_humanoid_names:
+        index = list_of_humanoid_names.index(humanoid_name)
+        return list_of_humanoids[index]
+
+
+def look_at_humanoid(humanoid):
+    """
+    Returns a detailed description of humaniod.
+    :param humanoid: Instance of humanoid
+    :return: String
+    """
+    return humanoid.look_at_character(humanoid.name)
+
+
+def create_npcs(number_of_npcs, names, moods):
     """
     This function returns a list of humanoid objects, they will all have unique names.
     :param number_of_npcs: integer
     :return: list of non player characters
     """
     list_of_npcs = []
-    names = {"dwarf": ["Thatmig", "Ostar", "Lokoki", "Graghik"], "goblin": ["Krasb", "Zruq", "Vrois", "Zex"]}
 
     for i in range(number_of_npcs):
         random_species = random.choice(["dwarf", "goblin"])
         random_name = random.choice(names[random_species])
         names[random_species].remove(random_name)
+        random_mood = random.choice(moods)
         random_gender = random.choice(["male", "female"])
-        list_of_npcs.append(create_humanoid(type=random_species, name=random_name, gender=random_gender, player=False))
+        list_of_npcs.append(create_humanoid(type=random_species, name=random_name, gender=random_gender,
+                                            mood=random_mood, player=False))
 
     return list_of_npcs
 
@@ -240,16 +340,16 @@ def assign_npc_item(in_npc, type_of_item):
     :return: None
     """
     if type_of_item == "sword":
-        in_npc.items.append(Sword(assigned=True, material="bronze", condition="new", item_type="sword"))
+        in_npc.backpack.append(Sword(assigned=True, material="bronze", condition="new", item_type="sword"))
 
     elif type_of_item == "axe":
-        in_npc.items.append(Axe(assigned=True, material="bronze", condition="new", item_type="axe"))
+        in_npc.backpack.append(Axe(assigned=True, material="bronze", condition="new", item_type="axe"))
 
     elif type_of_item == "shield":
-        in_npc.items.append(Shield(assigned=True, material="bronze", condition="new", item_type="shield"))
+        in_npc.backpack.append(Shield(assigned=True, material="bronze", condition="new", item_type="shield"))
 
     elif type_of_item == "helmet":
-        in_npc.items.append(Helmet(assigned=True, material="bronze", condition="new", item_type="helmet"))
+        in_npc.backpack.append(Helmet(assigned=True, material="bronze", condition="new", item_type="helmet"))
 
 
 def create_weapon(type_of_weapon, material, condition="new"):
