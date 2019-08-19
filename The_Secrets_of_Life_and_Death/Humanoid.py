@@ -64,7 +64,6 @@ class Humanoid:
         description += self.name + "'s backpack: " + self.get_description_of_items_in_backpack()
         return description
 
-
     def get_description_of_items_in_backpack(self):
         """
         This function returns a description of items the humanoid has.
@@ -79,9 +78,9 @@ class Humanoid:
             count = 0
             for item in self.backpack:
                 if count < len(self.backpack):
-                    description += "a " + str(item.get_description()) + ", "
+                    description += str(item.get_description()) + ", "
                 else:
-                    description += "a " + str(item.get_description()) + "."
+                    description += str(item.get_description()) + "."
             return description
 
     def get_description_of_item_in_right_hand(self):

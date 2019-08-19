@@ -6,6 +6,10 @@ from Location import Location
 from Humanoid import Humanoid
 from AcceptableAnswers import *
 import random
+from Materials import *
+from HumanoidMoods import *
+from HumanoidNames import *
+from MapSettings import *
 
 
 def question(question, answers=acceptable_answers):
@@ -223,6 +227,7 @@ def player_put_item_in_backpack(player):
         print("The " + item_1.get_description() + " and " + item_2.get_description()
               + " have been added to your backpack.")
 
+
 def player_close_container(player):
     """
     Handles player closing container.
@@ -339,17 +344,22 @@ def assign_npc_item(in_npc, type_of_item):
     :param: type_of_item: String, this is a type of item. Acceptable items are "sword", "axe", "shield", "helmet".
     :return: None
     """
+    condition = random.choice(item_condition)
     if type_of_item == "sword":
-        in_npc.backpack.append(Sword(assigned=True, material="bronze", condition="new", item_type="sword"))
+        material = select_random_material("metal")
+        in_npc.backpack.append(Sword(assigned=True, material=material, condition=condition, item_type="sword"))
 
     elif type_of_item == "axe":
-        in_npc.backpack.append(Axe(assigned=True, material="bronze", condition="new", item_type="axe"))
+        material = select_random_material("metal")
+        in_npc.backpack.append(Axe(assigned=True, material=material, condition=condition, item_type="axe"))
 
     elif type_of_item == "shield":
-        in_npc.backpack.append(Shield(assigned=True, material="bronze", condition="new", item_type="shield"))
+        material = select_random_material(random.choice(["wood", "metal"]))
+        in_npc.backpack.append(Shield(assigned=True, material=material, condition=condition, item_type="shield"))
 
     elif type_of_item == "helmet":
-        in_npc.backpack.append(Helmet(assigned=True, material="bronze", condition="new", item_type="helmet"))
+        material = select_random_material("metal")
+        in_npc.backpack.append(Helmet(assigned=True, material=material, condition=condition, item_type="helmet"))
 
 
 def create_weapon(type_of_weapon, material, condition="new"):
@@ -392,7 +402,9 @@ def create_container(weapon_amt=0, armour_amt=0):
     :param armour_amt: Integer, the amount of weapons to put in container.
     :return: container object
     """
-    container = Container()
+    container = Container(material=random.choice(materials["wood"]), condition=random.choice(item_strength), capacity=5,
+                          is_open=False, is_locked=False)
+
     list_of_items = []
 
     # Create random weapons.
@@ -427,20 +439,33 @@ def create_containers_with_random_items(number_of_containers):
     return list_of_containers
 
 
-def create_location(type):
+def create_location(room_type):
     """
     This function creates one location based upon the type.
     :param type: String, the available types are ["small_room" "big_room"]
     :return: an istance of Location
     """
-    if type == "small_room":
+    if room_type == "small_room":
         room = Small_Room()
 
-    elif type == "big_room":
+    elif room_type == "big_room":
         room = Big_Room()
 
     return room
 
+
+def select_random_material(type_of_material):
+    """
+
+    :param type_of_material: String acceptable values are "metal", "wood", "fabric"
+    :return: String of the type of fabric.
+    """
+    if type_of_material == "metal":
+        material = random.choice(materials["metal"])
+        return material
+    elif type_of_material == "wood":
+        material = random.choice(materials["wood"])
+        return material
 
 def print_list_of_items_in_rooms(list_of_rooms):
     """
@@ -541,3 +566,25 @@ def print_game_intro():
     print("At last, your search is over! You found the infamous tower! Rumor has it, a necromancer resides here. \n"
           "Be on guard. You know what you are here to do, the time for action is nigh.")
     print("---------------------------------------------------------------------------------------------------------\n")
+
+
+def initialize_player_settings():
+    start_type = question("Quick Start: Q\nCustom Start: C \n", [["q", "c"]])
+    if start_type == "c":
+        humanoid_type = question("Do you want to be a dwarf or goblin?", [["dwarf", "goblin"]])
+        name = input("What is your name?")
+        gender = question("What is your gender?", [["male", "female"]])
+        weapon = question("What type of weapon do you want? (sword, axe)?", [["sword", "axe"]])
+        player = create_humanoid(humanoid_type, name, gender, mood=humanoid_moods[0], player=True)
+        if weapon == "sword":
+            player.backpack.append(Sword(assigned=True, item_type="sword", material="bronze", condition="new"))
+        elif weapon == "axe":
+            player.backpack.append(Axe(assigned=True, item_type="axe", material="bronze", condition="new"))
+    else:
+        gender = random.choice(["male", "female"])
+        humanoid_type = random.choice(["dwarf", "goblin"])
+        name = random.choice(humanoid_names[humanoid_type])
+
+        player = create_humanoid(humanoid_type, name + " Player", gender, mood=humanoid_moods[0], player=True)
+
+    return player

@@ -10,6 +10,7 @@ from ItemTypes import *
 from Map import print_maps
 from HumanoidNames import humanoid_names
 from HumanoidMoods import humanoid_moods
+from MapSettings import *
 
 
 def main():
@@ -18,25 +19,15 @@ def main():
     print_game_logo()
 
     # Initialize player settings.
-    humanoid_type = question("Do you want to be a dwarf or goblin?", [["dwarf", "goblin"]])
-    name = input("What is your name?")
-    gender = question("What is your gender?", [["male", "female"]])
-    weapon = question("What type of weapon do you want? (sword, axe)?", [["sword", "axe"]])
-    player = create_humanoid(humanoid_type, name, gender, mood=humanoid_moods[0], player=True)
-    if weapon == "sword":
-        player.backpack.append(Sword(assigned=True, item_type="sword", material="bronze", condition="new"))
-    elif weapon == "axe":
-        player.backpack.append(Axe(assigned=True, item_type="axe", material="bronze", condition="new"))
+    player = initialize_player_settings()
     list_of_acceptable_look_at_player_commands = ["look at " + player.name.lower()]
 
     # Initialize locations.
     seed = 666
-    max_rooms = 32
     list_of_rooms = map_init(seed, randint(1, max_rooms))
 
     # Initialize npc settings.
-    probability_that_npc_will_move = 50  # This is given in percentage.
-    npcs = create_npcs(4, humanoid_names, humanoid_moods)
+    npcs = create_npcs(number_of_npcs, humanoid_names, humanoid_moods)
     for npc in npcs:
         weapon = random.choice(["sword", "axe"])
         assign_npc_item(npc, weapon)
@@ -52,7 +43,7 @@ def main():
     list_of_humanoids = npcs.copy()
     list_of_humanoids.append(player)
 
-    list_of_containers = create_containers_with_random_items(10)
+    list_of_containers = create_containers_with_random_items(number_of_containers)
     map_scatter_containers(list_of_containers, list_of_rooms)
 
     # Main game loop____________________________________________________________

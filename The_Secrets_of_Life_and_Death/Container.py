@@ -2,7 +2,8 @@ class Container:
     """
     This class represents a container. The object that can contain items.
     """
-    def __init__(self, description="container", material="oak", condition="Weak", capacity=5, is_open=False, is_locked=False):
+    def __init__(self, description="container", material="oak", condition="Weak", capacity=5, is_open=False,
+                 is_locked=False):
         self.description = description
         self.material = material
         self.condition = condition
