@@ -747,6 +747,7 @@ def initialize_player_settings():
         name = random.choice(humanoid_names[humanoid_type])
 
         player = create_humanoid(humanoid_type, name + " Player", gender, mood=humanoid_moods[0], player=True)
+        player.backpack.append(Axe(assigned=True, item_type="axe", material="bronze", condition="new"))
         player.backpack.append(Picks(assigned=True, item_type="picks", material="steel", condition="new"))
 
     return player
