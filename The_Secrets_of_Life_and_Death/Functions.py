@@ -228,6 +228,49 @@ def player_put_item_in_backpack(player):
               + " have been added to your backpack.")
 
 
+def player_take_item_from_backpack(player):
+    """
+    Takes item from back pack and places it in players hand. The right hand fills first and then the left.
+    :param player: instance of humanoid.
+    :return: None
+    """
+    if len(player.backpack) == 0:
+        print("No items in back pack.")
+    elif len(player.backpack) == 1:
+        if len(player.right_hand) == 0:
+            item = player.backpack[0]
+            player.right_hand.append(item)
+            player.backpack.remove(item)
+            print("Item has been added to your right hand.")
+        elif len(player.left_hand) == 0:
+            item = player.backpack[0]
+            player.left_hand.append(item)
+            player.backpack.remove(item)
+            print("Item has been added to your left hand.")
+        else:
+            print("You can not grab item because your hands are full.")
+    else:
+        options = ""
+        option_number = []
+        for i in range(len(player.backpack)):
+            options += "[" + str(i) + "] " + player.backpack[i].get_description() + "\n"
+            option_number.append(str(i))
+        print(options)
+        num_item = question("Which item?", option_number)
+        if len(player.right_hand) == 0:
+            item = player.backpack[int(num_item)]
+            player.right_hand.append(item)
+            player.backpack.remove(item)
+            print("Item has been added to your right hand.")
+        elif len(player.left_hand) == 0:
+            item = player.backpack[int(num_item)]
+            player.left_hand.append(item)
+            player.backpack.remove(item)
+            print("Item has been added to your left hand.")
+        else:
+            print("You can not grab item because your hands are full.")
+
+
 def player_close_container(player):
     """
     Handles player closing container.
@@ -267,9 +310,11 @@ def player_open_container(player):
     """
     if len(player.room.containers) == 1:
         if not player.room.containers[0].is_open:
-            player.room.containers[0].open_container()
-            print("The container has been opened.")
-            time = "move forward"
+            if not player.room.containers[0].is_locked:
+                player.room.containers[0].open_container()
+                print("The container has been opened.")
+            else:
+                print("Container is locked.")
         else:
             print("This container is already open.")
     elif len(player.room.containers) > 1:
@@ -281,12 +326,117 @@ def player_open_container(player):
         print(options)
         num = question("Which container do you want to open?", option_number)
         if not player.room.containers[int(num)].is_open:
-            player.room.containers[int(num)].open_container()
-            print("The container has been opened.")
+            if not player.room.containers[int(num)].is_locked:
+                player.room.containers[int(num)].open_container()
+                print("The container has been opened.")
+            else:
+                print("Container is locked.")
         else:
             print("This container is already open.")
     else:
         print("There are no containers in this room.")
+
+
+def player_pick_lock(player):
+    """
+    Handles player picking lock on container. Player needs to have picks in a hand to pick a lock.
+    :param player: Instance of player.
+    :return: True if a lock has be picked successfully.
+    """
+    if len(player.room.containers) == 1:
+        if player.room.containers[0].is_locked:
+            if len(player.right_hand) == 1:
+                if player.right_hand[0].item_type == "picks":
+                    if player.right_hand[0].condition != "broken":
+                        player.room.containers[0].pick_lock()
+                        check_to_see_if_item_should_age(player.right_hand[0], probability_that_item_will_age,
+                                                        item_condition)
+                        print("The lock has been picked.")
+                        return True
+                    else:
+                        print("These lock picks are broken.")
+                        return False
+                if player.left_hand[0].item_type == "picks":
+                    if player.left_hand[0].condition != "broken":
+                        player.room.containers[0].pick_lock()
+                        check_to_see_if_item_should_age(player.left_hand[0], probability_that_item_will_age,
+                                                        item_condition)
+                        print("The lock has been picked.")
+                        return True
+                    else:
+                        print("These lock picks are broken.")
+                        return False
+                else:
+                    print("You have no lock picks equipped.")
+                    return False
+            else:
+                print("You have no lock picks equipped.")
+                return False
+        else:
+            print("The container is not locked.")
+            return False
+    elif len(player.room.containers) > 1:
+        options = ""
+        option_number = []
+        for i in range(len(player.room.containers)):
+            options += "[" + str(i) + "] " + player.room.containers[i].get_description() + "\n"
+            option_number.append(str(i))
+        print(options)
+        num = question("Which lock do you want to pick?", option_number)
+        if player.room.containers[int(num)].is_locked:
+            if len(player.right_hand) == 1:
+                if player.right_hand[0].item_type == "picks":
+                    if player.right_hand[0].condition != "broken":
+                        player.room.containers[int(num)].pick_lock()
+                        check_to_see_if_item_should_age(player.right_hand[0], probability_that_item_will_age,
+                                                        item_condition)
+                        print("The lock has been picked.")
+                        return True
+                    else:
+                        print("These lock picks are broken.")
+                        return False
+            if len(player.left_hand) == 1:
+                if player.left_hand[0].item_type == "picks":
+                    if player.left_hand[0].condition != "broken":
+                        player.room.containers[int(num)].pick_lock()
+                        check_to_see_if_item_should_age(player.left_hand[0], probability_that_item_will_age,
+                                                        item_condition)
+                        print("The lock has been picked.")
+                        return True
+                    else:
+                        print("These lock picks are broken.")
+                        return False
+            else:
+                print("You have no lock picks equipped.")
+                return False
+        else:
+            print("The container is not locked.")
+            return False
+    else:
+        print("There are no locks to pick.")
+        return False
+
+
+def check_to_see_if_item_should_age(item, p_that_item_will_age, item_condition_list):
+    """
+    This function checks to see if an item should age when used based off the variable in map settings.
+    :param item: An instance of the item class.
+    :param p_that_item_will_age: An integer from the MapSetting script.
+    :param item_condition_list: An list from the Materials script.
+    :return: True if item should age. False if it should not.
+    """
+    condition = item.condition
+
+    rand_num = random.randint(0, 100)
+    if rand_num < p_that_item_will_age:
+        if item_condition_list.index(condition) != len(item_condition_list) - 1:
+            condition = item_condition_list[item_condition_list.index(condition) + 1]
+            item.condition = condition
+            return True
+        else:
+            return False
+    else:
+        return False
 
 
 def get_humanoid_object_from_look_command(action, list_of_humanoids):
@@ -423,6 +573,11 @@ def create_container(weapon_amt=0, armour_amt=0):
         container.add_item(item)
     container.is_open = False
 
+    # Randomly assign some containers as locked.
+    rand_num = random.randint(0, 100)
+    if rand_num < probability_that_containers_will_be_locked:
+        container.is_locked = True
+
     return container
 
 
@@ -466,6 +621,7 @@ def select_random_material(type_of_material):
     elif type_of_material == "wood":
         material = random.choice(materials["wood"])
         return material
+
 
 def print_list_of_items_in_rooms(list_of_rooms):
     """
@@ -522,8 +678,11 @@ def print_help_menu():
     print("look at 'character's name'")
     print("open container")
     print("close container")
+    print("pick lock")
     print("take from container")
     print("put in container")
+    print("take item from backpack")
+    print("put item in backpack")
     print("help")
     print("---------------------------------------------------------------------------------------------------------\n")
 
@@ -580,11 +739,14 @@ def initialize_player_settings():
             player.backpack.append(Sword(assigned=True, item_type="sword", material="bronze", condition="new"))
         elif weapon == "axe":
             player.backpack.append(Axe(assigned=True, item_type="axe", material="bronze", condition="new"))
+        player.backpack.append(Picks(assigned=True, item_type="lock-picks", material="steel", condition="new"))
+
     else:
         gender = random.choice(["male", "female"])
         humanoid_type = random.choice(["dwarf", "goblin"])
         name = random.choice(humanoid_names[humanoid_type])
 
         player = create_humanoid(humanoid_type, name + " Player", gender, mood=humanoid_moods[0], player=True)
+        player.backpack.append(Picks(assigned=True, item_type="picks", material="steel", condition="new"))
 
     return player

@@ -1,10 +1,15 @@
-from Container import Container
-from Item import Item
+
+from MapSettings import *
+from Materials import *
 from ItemTypes import *
-import random
 from Functions import *
 
-list_of_containers = create_containers_with_random_items(5)
+picks = Picks(assigned=True, item_type="picks", material="steel", condition="new")
 
-for container in list_of_containers:
-    print(container.get_description())
+print(picks.get_description())
+check_to_see_if_item_should_age(picks, probability_that_item_will_age, item_condition)
+print(picks.get_description())
+check_to_see_if_item_should_age(picks, probability_that_item_will_age, item_condition)
+print(picks.get_description())
+check_to_see_if_item_should_age(picks, probability_that_item_will_age, item_condition)
+print(picks.get_description())

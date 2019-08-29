@@ -27,7 +27,7 @@ class Container:
                 if count < len(self.contents):
                     description += "a " + item.get_description() + ", "
                 else:
-                    description += "a " +item.get_description() + "."
+                    description += "a " + item.get_description() + "."
             return description
         else:
             description = ""
@@ -48,6 +48,13 @@ class Container:
         :return: None
         """
         self.is_open = False
+
+    def pick_lock(self):
+        """
+        Opens a lock if humanoid has lock picks.
+        :return: None
+        """
+        self.is_locked = False
 
     def add_item(self, item):
         """

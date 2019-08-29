@@ -91,6 +91,10 @@ def main():
             elif action in close_container:
                 player_close_container(player)
                 time = "move forward"
+            elif action in pick_lock:
+                success = player_pick_lock(player)
+                if success:
+                    time = "move forward"
             elif action in take_item_from_container:
                 player_take_item_from_container(player)
                 time = "move forward"
@@ -99,6 +103,9 @@ def main():
                 time = "move forward"
             elif action in put_item_in_backpack:
                 player_put_item_in_backpack(player)
+                time = "move forward"
+            elif action in take_item_from_backpack:
+                player_take_item_from_backpack(player)
                 time = "move forward"
             elif action in show_map:
                 print_maps(list_of_rooms)
