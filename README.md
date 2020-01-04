@@ -11,28 +11,13 @@ To run this you will need python on your machine.
 
 [Python]https://www.python.org/
 
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
 ## Authors
 
 * **Kevin Haston** - *Initial work* - [Git Hub Profile](https://github.com/khaston10)
-	* **Kyle Haston** - *Collab* - I don't know Vim yet.
+* **Kyle Haston** - *Collab* - [Git Hub Profile](https://github.com/KyleHaston)  
 
 If you add to this project put your information here.
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+Inspired by [Dwarf Fortress] -  http://www.bay12games.com/dwarves/
